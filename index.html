@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Color Palette Generator · 100 Shades</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -14,7 +15,9 @@
   --bg:#F8F5F2;--surface:#FFFFFF;--border:#E8E3DD;
   --text:#2A2520;--muted:#9A9390;--accent:#D4867A;
 }
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+  *{font-family:'Nunito', sans-serif !important;}
+  input, button, textarea{font-family:'Nunito', sans-serif !important;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 .hero{background:var(--surface);border-bottom:1px solid var(--border);padding:48px 40px 36px;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,var(--teal) 0%,var(--cream) 33%,var(--peach) 66%,var(--pink) 100%)}
 .hero-inner{max-width:860px;margin:0 auto}
@@ -46,9 +49,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .group-meta .name{font-size:12px;font-weight:600;letter-spacing:.3px;text-transform:uppercase;color:var(--muted)}
 .group-meta .tag{font-size:11px;color:var(--muted)}
 .circles-row{display:flex;gap:8px;flex-wrap:nowrap}
-.circle-item{text-align:center;flex:1;min-width:0}
-.color-circle{width:100%;padding-bottom:100%;border-radius:50%;position:relative;border:2px solid rgba(255,255,255,.7);box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:4px}
-.hex-code{font-size:9px;font-family:'DM Mono',monospace;color:var(--muted);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.circle-item{text-align:center;flex:0 0 auto;width:32px;}
+.color-circle{width:32px;height:32px;padding-bottom:0;border-radius:50%;}
+.hex-code{font-size:8px;line-height:1.2;white-space:normal;overflow:visible;text-overflow:unset;word-break:break-all;}
 .btn-section{max-width:860px;margin:28px auto 60px;padding:0 40px}
 .btn-generate{width:100%;padding:16px;background:var(--text);color:white;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:opacity .2s,transform .1s;display:flex;align-items:center;justify-content:center;gap:10px}
 .btn-generate:hover{opacity:.88}
@@ -89,6 +92,8 @@ input[type=range]:focus{outline: none;}
   .success-inner{flex-direction:column !important;align-items:flex-start !important;gap:14px;}
   .btn-download{margin-left:0 !important;width:100%;text-align:center;}
 }
+@media(max-width:540px){.circles-row{flex-wrap:wrap;gap:10px;}
+}
   
 </style>
 </head>
@@ -97,7 +102,7 @@ input[type=range]:focus{outline: none;}
 <div class="hero">
   <div class="hero-inner">
     <h1>Color Palette <span>Generator</span></h1>
-    <p>Upload gambar apa saja — foto, ilustrasi, atau palet warna — sistem akan otomatis mengekstrak warna dominan dan generate <strong>200 shades</strong> lengkap dalam <strong>2 halaman PDF</strong> — termasuk shade strips, blends, shadow multiply, deep shadow, pastel tint &amp; light highlight.</p>
+    <p>Upload gambar apa saja — foto, ilustrasi, atau palet warna — sistem akan otomatis mengekstrak warna dominan lalu generate 200 shades.</p>
   </div>
 </div>
 
@@ -662,7 +667,10 @@ async function generatePDF(bases) {
 }
 
 btnGenerate.addEventListener('click', function(){
-  if (extractedBases.length > 0) generatePDF(extractedBases);
+  if (extractedBases.length > 0){
+    previewSection.classList.remove('visible');
+    generatePDF(extractedBases);
+  }
 });
 
 document.getElementById('btnDownload').addEventListener('click', function(){
