@@ -443,9 +443,9 @@ function buildGroups(bases) {
 
   /* G25–G26: More blend pairs */
   (function(){
-    var A=bases[Math.min(8,n-1)%n], B=bases[Math.min(9,n-1)%n];
+    var A=bases[8%n], B=bases[9%n];
     g.push({ title: lbl(g.length)+' · '+chr(8)+'+'+chr(9)+' Blend', tag:'Extd2 · Mix', colors: arr(function(i){return mix(A,B,i/7);}) });
-    var C=bases[Math.min(10,n-1)%n], D=bases[Math.min(11,n-1)%n];
+    var C=bases[10%n], D=bases[11%n];
     g.push({ title: lbl(g.length)+' · '+chr(10)+'+'+chr(11)+' Blend', tag:'Extd2 · Mix', colors: arr(function(i){return mix(C,D,i/7);}) });
   })();
 
