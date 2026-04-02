@@ -402,7 +402,7 @@ function buildGroups(bases) {
   (function(){
     var E=bases[Math.min(4,n-1)], F=bases[Math.min(5,n-1)];
     g.push({ title: lbl(g.length)+' · '+chr(4)+'+'+chr(5)+' Blend', tag:'Extd · Mix', colors: arr(function(i){return mix(E,F,i/7);}) });
-    var G2=bases[Math.min(6,n-1)], H=bases[Math.min(7,n-1)];
+    var G2=bases[6%n], H=bases[7%n];
     g.push({ title: lbl(g.length)+' · '+chr(6)+'+'+chr(7)+' Blend', tag:'Extd · Mix', colors: arr(function(i){return mix(G2,H,i/7);}) });
   })();
 
