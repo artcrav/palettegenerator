@@ -163,6 +163,9 @@ input[type=range]:focus{outline: none;}
       <p>200 warna dalam 20 grup · 2 halaman A4 · Shades, Blends, Shadow &amp; Highlight</p>
     </div>
     <button class="btn-download" id="btnDownload">Download PDF</button>
+    <button class="btn-download" id="btnDownloadIbis">
+Download Ibis Palette (.ipcfg)
+    </button>
   </div>
 </div>
 
@@ -180,6 +183,13 @@ function hexToRgb(h) {
 function rgbToHex(r, g, b) {
   var cl = function(v){ return Math.min(255, Math.max(0, Math.round(v))); };
   return '#' + [cl(r),cl(g),cl(b)].map(function(v){ return v.toString(16).padStart(2,'0'); }).join('').toUpperCase();
+}
+function hexToRGBA(hex){
+  hex = hex.replace('#','')
+    let r=parseInt(hex.substring(0,2),16)
+      let g=parseInt(hex.substring(2,4),16)
+        let b=parseInt(hex.substring(4,6),16)
+          return [r,g,b,255]
 }
 function lighten(h, f) { var c=hexToRgb(h); return rgbToHex(c[0]+(255-c[0])*f, c[1]+(255-c[1])*f, c[2]+(255-c[2])*f); }
 function darken(h, f)  { var c=hexToRgb(h); return rgbToHex(c[0]*(1-f), c[1]*(1-f), c[2]*(1-f)); }
@@ -682,6 +692,69 @@ document.getElementById('btnDownload').addEventListener('click', function(){
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 });
+
+  async function exportIPCFG(groups){
+
+  // ambil semua warna dari groups
+  let allColors=[]
+
+  groups.forEach(g=>{
+    g.colors.forEach(c=>{
+      allColors.push(c)
+    })
+  })
+
+  // load template
+  let res = await fetch("assets/template.ipcfg")
+  let buffer = await res.arrayBuffer()
+
+  let bytes = new Uint8Array(buffer)
+
+  // OFFSET hasil analisis ukuran file kamu
+  const COLOR_OFFSET = 16384
+
+  const TOTAL_SLOTS = 424
+
+  for(let i=0;i<TOTAL_SLOTS;i++){
+
+    let pos = COLOR_OFFSET + (i*4)
+
+    if(i < allColors.length){
+
+      let rgba = hexToRGBA(allColors[i])
+
+      bytes[pos]   = rgba[0]
+      bytes[pos+1] = rgba[1]
+      bytes[pos+2] = rgba[2]
+      bytes[pos+3] = rgba[3]
+
+    }
+    else{
+
+      // slot kosong
+      bytes[pos]   = 0
+      bytes[pos+1] = 0
+      bytes[pos+2] = 0
+      bytes[pos+3] = 0
+
+    }
+
+  }
+
+  // download file
+  let blob=new Blob([bytes],{type:"application/octet-stream"})
+    let a=document.createElement("a")
+      a.href=URL.createObjectURL(blob)
+      a.download="palette.ipcfg"
+      a.click()
+  }
+
+  document
+.getElementById("btnDownloadIbis")
+.addEventListener("click", ()=>{
+  if(!extractedBases.length) return
+  let groups = buildGroups(extractedBases)exportIPCFG(groups)
+})
 </script>
 </body>
 </html>
