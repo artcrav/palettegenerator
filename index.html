@@ -977,11 +977,6 @@ function handleFile(file) {
         if (bases.length < 2) throw new Error('Kurang dari 2 warna berbeda terdeteksi. Coba gambar dengan warna yang lebih kontras.');
         extractedBases = bases;
         showPreview(extractedBases);
-
-        /* ── Scroll to preview after palette is rendered ── */
-        setTimeout(function() {
-          document.getElementById('previewSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 400);
       } catch(e) {
         showError(e.message || 'Error memproses gambar.');
       }
